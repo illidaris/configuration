@@ -21,6 +21,10 @@ type NacosCenter struct {
 	settingMap map[string]map[string]*viper.Viper
 }
 
+func (n *NacosCenter) SetRealPort(port int) {
+	n.RealPort = port
+}
+
 func (n *NacosCenter) GetPort() uint64 {
 	if n.Port == 0 {
 		return uint64(n.RealPort)

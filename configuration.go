@@ -1,6 +1,7 @@
 package configuration
 
 type IConfigurationCenter interface {
+	SetRealPort(port int)
 	GetPort() uint64
 	RegisterMine() error
 	DeRegisterMine() error
