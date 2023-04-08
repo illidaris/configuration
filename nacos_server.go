@@ -57,6 +57,32 @@ func (n *NacosCenter) DeRegisterService(param vo.DeregisterInstanceParam) (bool,
 	return n.NamingClient.DeregisterInstance(param)
 }
 
+func (n *NacosCenter) UpdateMine() error {
+	param := vo.UpdateInstanceParam{
+		Ip:          n.IP,
+		Port:        n.Port,
+		Weight:      n.Weight,
+		Enable:      n.Enable,
+		Healthy:     n.Healthy,
+		ClusterName: n.ClusterName,
+		ServiceName: n.ServiceName,
+		GroupName:   n.GroupName,
+		Ephemeral:   n.Ephemeral,
+	}
+	success, err := n.UpdateService(param)
+	if err != nil {
+		return err
+	}
+	if !success {
+		return errors.New("UpdateServiceInstance failed")
+	}
+	return nil
+}
+
+func (n *NacosCenter) UpdateService(param vo.UpdateInstanceParam) (bool, error) {
+	return n.NamingClient.UpdateInstance(param)
+}
+
 // =========================== other ===========================
 
 func (n *NacosCenter) BatchRegisterService(param vo.BatchRegisterInstanceParam) {
@@ -65,14 +91,6 @@ func (n *NacosCenter) BatchRegisterService(param vo.BatchRegisterInstanceParam) 
 		panic("BatchRegisterServiceInstance failed!" + err.Error())
 	}
 	fmt.Printf("BatchRegisterServiceInstance,param:%+v,result:%+v \n\n", param, success)
-}
-
-func (n *NacosCenter) UpdateService(param vo.UpdateInstanceParam) {
-	success, err := n.NamingClient.UpdateInstance(param)
-	if !success || err != nil {
-		panic("UpdateInstance failed!" + err.Error())
-	}
-	fmt.Printf("UpdateServiceInstance,param:%+v,result:%+v \n\n", param, success)
 }
 
 // =========================== discover ===========================
