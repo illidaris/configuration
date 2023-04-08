@@ -12,6 +12,7 @@ var _ = IConfigurationCenter(&NacosCenter{})
 
 type NacosCenter struct {
 	ServiceInfo
+	RealPort int
 
 	ConfigClient config_client.IConfigClient
 	NamingClient naming_client.INamingClient
@@ -21,6 +22,9 @@ type NacosCenter struct {
 }
 
 func (n *NacosCenter) GetPort() uint64 {
+	if n.Port == 0 {
+		return uint64(n.RealPort)
+	}
 	return n.Port
 }
 

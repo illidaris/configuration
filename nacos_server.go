@@ -12,7 +12,7 @@ import (
 func (n *NacosCenter) RegisterMine() error {
 	param := vo.RegisterInstanceParam{
 		Ip:          n.IP,
-		Port:        n.Port,
+		Port:        n.GetPort(),
 		Weight:      n.Weight,
 		Enable:      n.Enable,
 		Healthy:     n.Healthy,
@@ -38,7 +38,7 @@ func (n *NacosCenter) RegisterService(param vo.RegisterInstanceParam) (bool, err
 func (n *NacosCenter) DeRegisterMine() error {
 	param := vo.DeregisterInstanceParam{
 		Ip:          n.IP,
-		Port:        n.Port,
+		Port:        n.GetPort(),
 		Cluster:     n.ClusterName,
 		ServiceName: n.ServiceName,
 		GroupName:   n.GroupName,
@@ -60,7 +60,7 @@ func (n *NacosCenter) DeRegisterService(param vo.DeregisterInstanceParam) (bool,
 func (n *NacosCenter) UpdateMine() error {
 	param := vo.UpdateInstanceParam{
 		Ip:          n.IP,
-		Port:        n.Port,
+		Port:        n.GetPort(),
 		Weight:      n.Weight,
 		Enable:      n.Enable,
 		Healthy:     n.Healthy,
