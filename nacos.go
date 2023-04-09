@@ -12,7 +12,6 @@ var _ = IConfigurationCenter(&NacosCenter{})
 
 type NacosCenter struct {
 	ServiceInfo
-	RealPort int
 
 	ConfigClient config_client.IConfigClient
 	NamingClient naming_client.INamingClient
@@ -21,14 +20,13 @@ type NacosCenter struct {
 	settingMap map[string]map[string]*viper.Viper
 }
 
-func (n *NacosCenter) SetRealPort(port int) {
-	n.RealPort = port
+func (n *NacosCenter) SetRealPort(port int) error {
+	n.Port = uint64(port)
+	viper.Set("nacos.Service.Port", n.Port)
+	return viper.WriteConfig()
 }
 
 func (n *NacosCenter) GetPort() uint64 {
-	if n.Port == 0 {
-		return uint64(n.RealPort)
-	}
 	return n.Port
 }
 
