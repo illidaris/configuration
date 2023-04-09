@@ -15,21 +15,21 @@ var (
 type Config vo.NacosClientParam
 
 type ServiceInfo struct {
-	GroupName   string
-	ServiceName string
-	ClusterName string
-	IP          string
-	Port        uint64
-	Weight      float64
-	Ephemeral   bool
-	Enable      bool
-	Healthy     bool
+	GroupName   string  `yaml:"groupname" json:"groupname"`
+	ServiceName string  `yaml:"servicename" json:"servicename"`
+	ClusterName string  `yaml:"clustername" json:"clustername"`
+	IP          string  `yaml:"ip" json:"ip"`
+	Port        uint64  `yaml:"port" json:"port"`
+	Weight      float64 `yaml:"weight" json:"weight"`
+	Ephemeral   bool    `yaml:"ephemeral" json:"ephemeral"`
+	Enable      bool    `yaml:"enable" json:"enable"`
+	Healthy     bool    `yaml:"healthy" json:"healthy"`
 }
 
 type SimpleConfig struct {
-	Service       ServiceInfo
-	ClientConfig  *SimpleClientConfig  // optional
-	ServerConfigs []SimpleServerConfig // optional
+	Service       ServiceInfo          `yaml:"service" json:"service"`
+	ClientConfig  *SimpleClientConfig  `yaml:"clientconfig" json:"clientconfig"`   // optional
+	ServerConfigs []SimpleServerConfig `yaml:"serverconfigs" json:"serverconfigs"` // optional
 }
 
 func (c *SimpleConfig) ToParam() (vo.NacosClientParam, error) {
@@ -49,9 +49,9 @@ func (c *SimpleConfig) ToParam() (vo.NacosClientParam, error) {
 }
 
 type SimpleServerConfig struct {
-	IpAddr   string // the nacos server address
-	Port     uint64 // nacos server port
-	GrpcPort uint64 // nacos server grpc port, default=server port + 1000, this is not required
+	IpAddr   string `yaml:"ipaddr" json:"ipaddr"`     // the nacos server address
+	Port     uint64 `yaml:"port" json:"port"`         // nacos server port
+	GrpcPort uint64 `yaml:"grpcport" json:"grpcport"` // nacos server grpc port, default=server port + 1000, this is not required
 }
 
 func (c *SimpleServerConfig) ToNacosServerConfig() constant.ServerConfig {
@@ -63,11 +63,11 @@ func (c *SimpleServerConfig) ToNacosServerConfig() constant.ServerConfig {
 }
 
 type SimpleClientConfig struct {
-	NamespaceId string // the namespaceId of Nacos.When namespace is public, fill in the blank string here.
-	AppName     string // the appName
-	Endpoint    string // the endpoint for get Nacos server addresses
-	Username    string // the username for nacos auth
-	Password    string // the password for nacos auth
+	NamespaceId string `yaml:"namespaceid" json:"namespaceid"` // the namespaceId of Nacos.When namespace is public, fill in the blank string here.
+	AppName     string `yaml:"appname" json:"appname"`         // the appName
+	Endpoint    string `yaml:"endpoint" json:"endpoint"`       // the endpoint for get Nacos server addresses
+	Username    string `yaml:"username" json:"username"`       // the username for nacos auth
+	Password    string `yaml:"password" json:"password"`       // the password for nacos auth
 }
 
 func (c *SimpleClientConfig) ToOption() ([]constant.ClientOption, error) {

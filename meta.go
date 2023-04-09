@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	KEY_IS_REMOTE = "isRemote"
+	KEY_IS_REMOTE     = "isRemote"
+	KEY_TMP_PORT_PATH = "./tmp/port.txt"
 )
 
 var DefaultCenter IConfigurationCenter

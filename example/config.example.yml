@@ -1,23 +1,22 @@
-isRemote: true
+isremote: true
+mode: debug
 nacos:
-  Service:
-   ClusterName: dev02
-   ServiceName: party.op.norgannon
-   GroupName:  PARTY
-   Weight: 1
-   IP:
-   Port: 8080
-   Ephemeral: false
-   Enable: true
-   Healthy: true
-  ServerConfigs: 
-   - 
-     IpAddr: 192.168.97.71
-     Port: 8848
-     GrpcPort: 9848
-  ClientConfig:
-    NamespaceId: f9341555-a32d-492b-a604-611fb379e588
-    AppName:     party.op.norgannon
-    Username:    dev_party_op_norgannon
-    Password:    xxxxxx
+    clientconfig:
+        appname: common.op.demo.microserver
+        namespaceid: f9341555-a32d-492b-a604-611fb379e588
+        password: 123456
+        username: dev_common_op_demo
+    serverconfigs:
+        - grpcport: 9848
+          ipaddr: 192.168.97.71
+          port: 8848
+    service:
+        clustername: dev01
+        enable: true
+        ephemeral: true
+        groupname: OP
+        healthy: true
+        port: 58651
+        servicename: common.op.demo.microserver
+        weight: 1
 

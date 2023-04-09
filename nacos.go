@@ -1,10 +1,14 @@
 package configuration
 
 import (
+	"io/fs"
+	"io/ioutil"
+
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
+	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 )
 
@@ -12,6 +16,7 @@ var _ = IConfigurationCenter(&NacosCenter{})
 
 type NacosCenter struct {
 	ServiceInfo
+	RealPort uint64
 
 	ConfigClient config_client.IConfigClient
 	NamingClient naming_client.INamingClient
@@ -21,12 +26,17 @@ type NacosCenter struct {
 }
 
 func (n *NacosCenter) SetRealPort(port int) error {
-	n.Port = uint64(port)
-	viper.Set("nacos.Service.Port", n.Port)
-	return viper.WriteConfig()
+	if n.RealPort != uint64(port) {
+		n.RealPort = uint64(port)
+		return ioutil.WriteFile(KEY_TMP_PORT_PATH, []byte(cast.ToString(n.RealPort)), fs.ModePerm)
+	}
+	return nil
 }
 
 func (n *NacosCenter) GetPort() uint64 {
+	if n.Port == 0 { // random port
+		return n.RealPort
+	}
 	return n.Port
 }
 
@@ -38,6 +48,10 @@ func NewNacos(param vo.NacosClientParam, serv ServiceInfo) (IConfigurationCenter
 		ServiceInfo: serv,
 		logger:      &DefaultLogger{},
 		settingMap:  map[string]map[string]*viper.Viper{},
+	}
+	bs, err := ioutil.ReadFile(KEY_TMP_PORT_PATH)
+	if err == nil {
+		n.RealPort = cast.ToUint64(string(bs))
 	}
 	// create config client
 	client, err := clients.NewConfigClient(param)
