@@ -12,7 +12,7 @@ import (
 // AddConfigListener add config listen from remote nacos center
 func (n *NacosCenter) AddConfigListener(id, group string) error {
 	// step01 get config
-	data, err := n.GetContent(id, group)
+	data, err := n.GetContent(group, id)
 	if err != nil {
 		return err
 	}
@@ -20,7 +20,7 @@ func (n *NacosCenter) AddConfigListener(id, group string) error {
 		return err
 	}
 	// step01 listen change
-	return n.ListenContent(id, group, func(namespace, group, dataId, data string) {
+	return n.ListenContent(group, id, func(namespace, group, dataId, data string) {
 		if err := n.SetConfig(namespace, group, dataId, data); err != nil {
 			n.logger.ErrorCtx(context.TODO(), err.Error())
 		}
@@ -47,7 +47,7 @@ func (n *NacosCenter) SetConfig(namespace, group, dataId, data string) error {
 
 // Get get kv
 func (n *NacosCenter) Get(key string) interface{} {
-	data := n.getMeta(n.ServiceName, n.GroupName)
+	data := n.getMeta(n.GroupName, n.ServiceName)
 	if data == nil {
 		return nil
 	}
@@ -56,7 +56,7 @@ func (n *NacosCenter) Get(key string) interface{} {
 
 // GetByID get kv
 func (n *NacosCenter) GetByID(group, id, key string) interface{} {
-	data := n.getMeta(id, group)
+	data := n.getMeta(group, id)
 	if data == nil {
 		return nil
 	}
@@ -74,7 +74,7 @@ func (n *NacosCenter) getMeta(group, id string) *viper.Viper {
 	return n.settingMap[group][id]
 }
 
-func (n *NacosCenter) GetContent(id, group string) (string, error) {
+func (n *NacosCenter) GetContent(group, id string) (string, error) {
 	param := vo.ConfigParam{
 		DataId: id,
 		Group:  group,
@@ -82,7 +82,7 @@ func (n *NacosCenter) GetContent(id, group string) (string, error) {
 	return n.ConfigClient.GetConfig(param)
 }
 
-func (n *NacosCenter) ListenContent(id, group string, f func(namespace, group, dataId, data string)) error {
+func (n *NacosCenter) ListenContent(group, id string, f func(namespace, group, dataId, data string)) error {
 	param := vo.ConfigParam{
 		DataId:   id,
 		Group:    group,
