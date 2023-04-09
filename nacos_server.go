@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/nacos-group/nacos-sdk-go/v2/model"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 )
 
@@ -85,54 +86,50 @@ func (n *NacosCenter) UpdateService(param vo.UpdateInstanceParam) (bool, error) 
 
 // =========================== other ===========================
 
-func (n *NacosCenter) BatchRegisterService(param vo.BatchRegisterInstanceParam) {
+func (n *NacosCenter) BatchRegisterService(param vo.BatchRegisterInstanceParam) (bool, error) {
 	success, err := n.NamingClient.BatchRegisterInstance(param)
 	if !success || err != nil {
 		panic("BatchRegisterServiceInstance failed!" + err.Error())
 	}
 	fmt.Printf("BatchRegisterServiceInstance,param:%+v,result:%+v \n\n", param, success)
+	return success, err
 }
 
 // =========================== discover ===========================
 
-func (n *NacosCenter) GetService(param vo.GetServiceParam) {
-	service, err := n.NamingClient.GetService(param)
+func (n *NacosCenter) DiscoverInstanceOne(group, service string, clusters ...string) (string, error) {
+	instance, err := n.SelectOneHealthyInstance(vo.SelectOneHealthInstanceParam{
+		GroupName:   group,
+		ServiceName: service,
+		Clusters:    clusters,
+	})
 	if err != nil {
-		panic("GetService failed!" + err.Error())
+		return "", err
 	}
-	fmt.Printf("GetService,param:%+v, result:%+v \n\n", param, service)
+	if instance == nil {
+		return "", errors.New("no found instance")
+	}
+	return fmt.Sprintf("%s:%d", instance.Ip, instance.Port), nil
 }
 
-func (n *NacosCenter) GetAllService(param vo.GetAllServiceInfoParam) {
-	service, err := n.NamingClient.GetAllServicesInfo(param)
-	if err != nil {
-		panic("GetAllService failed!")
-	}
-	fmt.Printf("GetAllService,param:%+v, result:%+v \n\n", param, service)
+func (n *NacosCenter) GetService(param vo.GetServiceParam) (model.Service, error) {
+	return n.NamingClient.GetService(param)
 }
 
-func (n *NacosCenter) SelectAllInstances(param vo.SelectAllInstancesParam) {
-	instances, err := n.NamingClient.SelectAllInstances(param)
-	if err != nil {
-		panic("SelectAllInstances failed!" + err.Error())
-	}
-	fmt.Printf("SelectAllInstance,param:%+v, result:%+v \n\n", param, instances)
+func (n *NacosCenter) GetAllService(param vo.GetAllServiceInfoParam) (model.ServiceList, error) {
+	return n.NamingClient.GetAllServicesInfo(param)
 }
 
-func (n *NacosCenter) SelectInstances(param vo.SelectInstancesParam) {
-	instances, err := n.NamingClient.SelectInstances(param)
-	if err != nil {
-		panic("SelectInstances failed!" + err.Error())
-	}
-	fmt.Printf("SelectInstances,param:%+v, result:%+v \n\n", param, instances)
+func (n *NacosCenter) SelectAllInstances(param vo.SelectAllInstancesParam) ([]model.Instance, error) {
+	return n.NamingClient.SelectAllInstances(param)
 }
 
-func (n *NacosCenter) SelectOneHealthyInstance(param vo.SelectOneHealthInstanceParam) {
-	instances, err := n.NamingClient.SelectOneHealthyInstance(param)
-	if err != nil {
-		panic("SelectOneHealthyInstance failed!")
-	}
-	fmt.Printf("SelectOneHealthyInstance,param:%+v, result:%+v \n\n", param, instances)
+func (n *NacosCenter) SelectInstances(param vo.SelectInstancesParam) ([]model.Instance, error) {
+	return n.NamingClient.SelectInstances(param)
+}
+
+func (n *NacosCenter) SelectOneHealthyInstance(param vo.SelectOneHealthInstanceParam) (*model.Instance, error) {
+	return n.NamingClient.SelectOneHealthyInstance(param)
 }
 
 func (n *NacosCenter) Subscribe(param *vo.SubscribeParam) {

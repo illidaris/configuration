@@ -1,10 +1,23 @@
 package configuration
 
 type IConfigurationCenter interface {
+	IConfigCenter
+	IRegisterCenter
+	IDiscoverCenter
+}
+
+type IRegisterCenter interface {
 	SetRealPort(port int)
 	GetPort() uint64
 	RegisterMine() error
 	DeRegisterMine() error
+}
+
+type IDiscoverCenter interface {
+	DiscoverInstanceOne(group, service string, clusters ...string) (string, error)
+}
+
+type IConfigCenter interface {
 	AddConfigListener(id, group string) error
 	Get(key string) interface{}
 	GetByID(group, id, key string) interface{}
