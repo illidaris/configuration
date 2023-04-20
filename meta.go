@@ -52,6 +52,9 @@ func LoadConfig(configPath string) error {
 		if err != nil {
 			return err
 		}
+		if DefaultCenter == nil {
+			return errors.New("DefaultCenter is nil")
+		}
 		if err := DefaultCenter.AddConfigListener(nacosConfig.Service.ServiceName, nacosConfig.Service.GroupName); err != nil {
 			return err
 		}
@@ -65,7 +68,7 @@ func Init() error {
 	baseP := path.Join(p, "config", "config.yml")
 	err := LoadConfig(baseP)
 	if err != nil {
-		println(err)
+		println(err.Error())
 	}
 	return err
 }
