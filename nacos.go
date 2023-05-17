@@ -50,8 +50,12 @@ func NewNacos(param vo.NacosClientParam, serv ServiceInfo) (IConfigurationCenter
 	}
 	n := &NacosCenter{
 		ServiceInfo: serv,
-		logger:      &DefaultLogger{},
 		settingMap:  map[string]map[string]*viper.Viper{},
+	}
+	if defaultLogger != nil {
+		n.logger = defaultLogger
+	} else {
+		n.logger = &DefaultLogger{}
 	}
 	bs, err := ioutil.ReadFile(KEY_TMP_PORT_PATH)
 	if err == nil {

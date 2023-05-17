@@ -6,6 +6,7 @@ import (
 )
 
 var _ = ILogger(&DefaultLogger{})
+var defaultLogger ILogger
 
 type ILogger interface {
 	DebugCtx(ctx context.Context, msg string)

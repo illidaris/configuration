@@ -75,6 +75,10 @@ func Init(configPath string) error {
 	return err
 }
 
+func SetILogger(log ILogger) {
+	defaultLogger = log
+}
+
 func GetIPX() string {
 	ip, _ := GetIP()
 	return ip
