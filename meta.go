@@ -29,7 +29,7 @@ func Get(key string) interface{} {
 	}
 	return viper.Get(key)
 }
-func LoadConfig(configPath string) error {
+func LoadConfig(configPath string, callback func(string, string, string, string)) error {
 	b, err := pathEx.ExistOrNot(configPath)
 	if err != nil {
 		return err
@@ -55,7 +55,7 @@ func LoadConfig(configPath string) error {
 		if DefaultCenter == nil {
 			return errors.New("DefaultCenter is nil")
 		}
-		if err := DefaultCenter.AddConfigListener(nacosConfig.Service.ServiceName, nacosConfig.Service.GroupName); err != nil {
+		if err := DefaultCenter.AddConfigListener(nacosConfig.Service.ServiceName, nacosConfig.Service.GroupName, callback); err != nil {
 			return err
 		}
 	}
@@ -63,10 +63,12 @@ func LoadConfig(configPath string) error {
 	return nil
 }
 
-func Init() error {
-	p, _ := os.Getwd()
-	baseP := path.Join(p, "config", "config.yml")
-	err := LoadConfig(baseP)
+func Init(configPath string) error {
+	if configPath == "" {
+		p, _ := os.Getwd()
+		configPath = path.Join(p, "config", "config.yml")
+	}
+	err := LoadConfig(configPath, nil)
 	if err != nil {
 		println(err.Error())
 	}

@@ -10,26 +10,29 @@ import (
 )
 
 // AddConfigListener add config listen from remote nacos center
-func (n *NacosCenter) AddConfigListener(id, group string) error {
+func (n *NacosCenter) AddConfigListener(id, group string, callback func(string, string, string, string)) error {
 	// step01 get config
 	data, err := n.GetContent(group, id)
 	if err != nil {
 		return err
 	}
-	if err := n.SetConfig("", group, id, data); err != nil {
+	if err := n.SetConfig("", group, id, data, callback); err != nil {
 		return err
 	}
 	// step01 listen change
 	return n.ListenContent(group, id, func(namespace, group, dataId, data string) {
-		if err := n.SetConfig(namespace, group, dataId, data); err != nil {
+		if err := n.SetConfig(namespace, group, dataId, data, callback); err != nil {
 			n.logger.ErrorCtx(context.TODO(), err.Error())
 		}
 	})
 }
 
 // SetConfig set viper config
-func (n *NacosCenter) SetConfig(namespace, group, dataId, data string) error {
+func (n *NacosCenter) SetConfig(namespace, group, dataId, data string, callback func(string, string, string, string)) error {
 	n.logger.InfoCtx(context.TODO(), fmt.Sprintf("[%s|%s|%s]%s", namespace, group, dataId, data))
+	if callback != nil {
+		callback(namespace, group, dataId, data)
+	}
 	v := viper.New()
 	v.SetConfigType("yaml")
 	if err := v.ReadConfig(bytes.NewReader([]byte(data))); err != nil {
@@ -39,9 +42,6 @@ func (n *NacosCenter) SetConfig(namespace, group, dataId, data string) error {
 		n.settingMap[group] = map[string]*viper.Viper{}
 	}
 	n.settingMap[group][dataId] = v
-	// todo: will be remove
-	result := v.AllSettings()
-	n.logger.InfoCtx(context.TODO(), fmt.Sprintf("[%s|%s|%s]%d", namespace, group, dataId, len(result)))
 	return nil
 }
 

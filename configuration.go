@@ -4,6 +4,7 @@ type IConfigurationCenter interface {
 	IConfigCenter
 	IRegisterCenter
 	IDiscoverCenter
+	SetILogger(log ILogger)
 }
 
 type IRegisterCenter interface {
@@ -18,7 +19,7 @@ type IDiscoverCenter interface {
 }
 
 type IConfigCenter interface {
-	AddConfigListener(id, group string) error
+	AddConfigListener(id, group string, callback func(string, string, string, string)) error
 	Get(key string) interface{}
 	GetByID(group, id, key string) interface{}
 }

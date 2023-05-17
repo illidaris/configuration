@@ -25,6 +25,10 @@ type NacosCenter struct {
 	settingMap map[string]map[string]*viper.Viper
 }
 
+func (n *NacosCenter) SetILogger(log ILogger) {
+	n.logger = log
+}
+
 func (n *NacosCenter) SetRealPort(port int) error {
 	if n.RealPort != uint64(port) {
 		n.RealPort = uint64(port)
