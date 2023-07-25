@@ -15,15 +15,16 @@ var (
 type Config vo.NacosClientParam
 
 type ServiceInfo struct {
-	GroupName   string  `yaml:"groupname" json:"groupname"`
-	ServiceName string  `yaml:"servicename" json:"servicename"`
-	ClusterName string  `yaml:"clustername" json:"clustername"`
-	IP          string  `yaml:"ip" json:"ip"`
-	Port        uint64  `yaml:"port" json:"port"`
-	Weight      float64 `yaml:"weight" json:"weight"`
-	Ephemeral   bool    `yaml:"ephemeral" json:"ephemeral"`
-	Enable      bool    `yaml:"enable" json:"enable"`
-	Healthy     bool    `yaml:"healthy" json:"healthy"`
+	GroupName    string              `yaml:"groupname" json:"groupname"`
+	ServiceName  string              `yaml:"servicename" json:"servicename"`
+	ClusterName  string              `yaml:"clustername" json:"clustername"`
+	IP           string              `yaml:"ip" json:"ip"`
+	Port         uint64              `yaml:"port" json:"port"`
+	Weight       float64             `yaml:"weight" json:"weight"`
+	Ephemeral    bool                `yaml:"ephemeral" json:"ephemeral"`
+	Enable       bool                `yaml:"enable" json:"enable"`
+	Healthy      bool                `yaml:"healthy" json:"healthy"`
+	OtherConfigs map[string][]string `yaml:"others" json:"others"`
 }
 
 type SimpleConfig struct {
