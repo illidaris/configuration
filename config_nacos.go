@@ -15,7 +15,8 @@ var (
 type Config vo.NacosClientParam
 
 type ServiceInfo struct {
-	ConfigName
+	GroupName   string       `yaml:"groupname" json:"groupname"`
+	ServiceName string       `yaml:"servicename" json:"servicename"`
 	ClusterName string       `yaml:"clustername" json:"clustername"`
 	IP          string       `yaml:"ip" json:"ip"`
 	Port        uint64       `yaml:"port" json:"port"`
