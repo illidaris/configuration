@@ -59,7 +59,10 @@ func LoadConfig(configPath string, callback func(string, string, string, string)
 			return err
 		}
 		for _, other := range nacosConfig.Service.Others {
-			_ = DefaultCenter.AddConfigListener(other.ServiceName, other.GroupName, callback)
+			otherErr := DefaultCenter.AddConfigListener(other.ServiceName, other.GroupName, callback)
+			if otherErr != nil {
+				println(otherErr)
+			}
 		}
 	}
 	viper.WatchConfig()
