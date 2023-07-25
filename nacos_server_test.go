@@ -6,7 +6,21 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/v2/model"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/smartystreets/goconvey/convey"
+	"github.com/spf13/viper"
 )
+
+func TestConfig(t *testing.T) {
+	viper.SetConfigFile("./example/config.example.yml")
+	// If a config file is found, read it in.
+	if readErr := viper.ReadInConfig(); readErr != nil {
+		t.Error(readErr)
+	}
+	nacosConfig := &SimpleConfig{}
+	if err := viper.UnmarshalKey("nacos", nacosConfig); err != nil {
+		t.Error(err)
+	}
+	println(nacosConfig.Service.ServiceName)
+}
 
 func TestGetServive(t *testing.T) {
 	convey.Convey("TestGetServive", t, func() {

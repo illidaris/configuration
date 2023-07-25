@@ -19,4 +19,9 @@ nacos:
         port: 58651
         servicename: common.op.demo.microserver
         weight: 1
+        others:
+          - groupname: COMMON
+            servicename: common.op.demo.log
+          - groupname: COMMON
+            servicename: common.op.demo.auth
 
