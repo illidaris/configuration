@@ -10,7 +10,7 @@ import (
 
 // ============================ register ============================
 
-func (n *NacosCenter) RegisterMine() error {
+func (n *NacosCenter) RegisterMine(meta map[string]string) error {
 	param := vo.RegisterInstanceParam{
 		Ip:          n.IP,
 		Port:        n.GetPort(),
@@ -21,6 +21,7 @@ func (n *NacosCenter) RegisterMine() error {
 		ServiceName: n.ServiceName,
 		GroupName:   n.GroupName,
 		Ephemeral:   n.Ephemeral,
+		Metadata:    meta,
 	}
 	success, err := n.RegisterService(param)
 	if err != nil {
@@ -43,6 +44,7 @@ func (n *NacosCenter) DeRegisterMine() error {
 		Cluster:     n.ClusterName,
 		ServiceName: n.ServiceName,
 		GroupName:   n.GroupName,
+		Ephemeral:   n.Ephemeral,
 	}
 	success, err := n.DeRegisterService(param)
 	if err != nil {

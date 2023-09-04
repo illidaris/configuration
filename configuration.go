@@ -10,7 +10,7 @@ type IConfigurationCenter interface {
 type IRegisterCenter interface {
 	SetRealPort(port int) error
 	GetPort() uint64
-	RegisterMine() error
+	RegisterMine(meta map[string]string) error
 	DeRegisterMine() error
 }
 
