@@ -11,14 +11,18 @@ import (
 // ============================ register ============================
 
 func (n *NacosCenter) RegisterMine(meta map[string]string) error {
+	return n.RegisterServ(meta, n.ServiceName, n.GetPort())
+}
+
+func (n *NacosCenter) RegisterServ(meta map[string]string, srvname string, port uint64) error {
 	param := vo.RegisterInstanceParam{
 		Ip:          n.IP,
-		Port:        n.GetPort(),
+		Port:        port,
 		Weight:      n.Weight,
 		Enable:      n.Enable,
 		Healthy:     n.Healthy,
 		ClusterName: n.ClusterName,
-		ServiceName: n.ServiceName,
+		ServiceName: srvname,
 		GroupName:   n.GroupName,
 		Ephemeral:   n.Ephemeral,
 		Metadata:    meta,
@@ -38,11 +42,15 @@ func (n *NacosCenter) RegisterService(param vo.RegisterInstanceParam) (bool, err
 }
 
 func (n *NacosCenter) DeRegisterMine() error {
+	return n.DeRegisterServ(n.ServiceName, n.GetPort())
+}
+
+func (n *NacosCenter) DeRegisterServ(srvname string, port uint64) error {
 	param := vo.DeregisterInstanceParam{
 		Ip:          n.IP,
-		Port:        n.GetPort(),
+		Port:        port,
 		Cluster:     n.ClusterName,
-		ServiceName: n.ServiceName,
+		ServiceName: srvname,
 		GroupName:   n.GroupName,
 		Ephemeral:   n.Ephemeral,
 	}
@@ -61,14 +69,18 @@ func (n *NacosCenter) DeRegisterService(param vo.DeregisterInstanceParam) (bool,
 }
 
 func (n *NacosCenter) UpdateMine() error {
+	return n.UpdateServ(n.ServiceName, n.GetPort())
+}
+
+func (n *NacosCenter) UpdateServ(srvname string, port uint64) error {
 	param := vo.UpdateInstanceParam{
 		Ip:          n.IP,
-		Port:        n.GetPort(),
+		Port:        port,
 		Weight:      n.Weight,
 		Enable:      n.Enable,
 		Healthy:     n.Healthy,
 		ClusterName: n.ClusterName,
-		ServiceName: n.ServiceName,
+		ServiceName: srvname,
 		GroupName:   n.GroupName,
 		Ephemeral:   n.Ephemeral,
 	}

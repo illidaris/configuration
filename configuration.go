@@ -10,8 +10,11 @@ type IConfigurationCenter interface {
 type IRegisterCenter interface {
 	SetRealPort(port int) error
 	GetPort() uint64
+	GetServiceName() string
 	RegisterMine(meta map[string]string) error
+	RegisterServ(meta map[string]string, srvname string, port uint64) error
 	DeRegisterMine() error
+	DeRegisterServ(srvname string, port uint64) error
 }
 
 type IDiscoverCenter interface {

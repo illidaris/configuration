@@ -2,7 +2,7 @@ package configuration
 
 import (
 	"io/fs"
-	"io/ioutil"
+	"os"
 
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
@@ -29,10 +29,14 @@ func (n *NacosCenter) SetILogger(log ILogger) {
 	n.logger = log
 }
 
+func (n *NacosCenter) GetServiceName() string {
+	return n.ServiceName
+}
+
 func (n *NacosCenter) SetRealPort(port int) error {
 	if n.RealPort != uint64(port) {
 		n.RealPort = uint64(port)
-		return ioutil.WriteFile(KEY_TMP_PORT_PATH, []byte(cast.ToString(n.RealPort)), fs.ModePerm)
+		return os.WriteFile(KEY_TMP_PORT_PATH, []byte(cast.ToString(n.RealPort)), fs.ModePerm)
 	}
 	return nil
 }
@@ -57,7 +61,7 @@ func NewNacos(param vo.NacosClientParam, serv ServiceInfo) (IConfigurationCenter
 	} else {
 		n.logger = &DefaultLogger{}
 	}
-	bs, err := ioutil.ReadFile(KEY_TMP_PORT_PATH)
+	bs, err := os.ReadFile(KEY_TMP_PORT_PATH)
 	if err == nil {
 		n.RealPort = cast.ToUint64(string(bs))
 	}
