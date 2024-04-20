@@ -48,6 +48,10 @@ func (n *NacosCenter) GetPort() uint64 {
 	return n.Port
 }
 
+func (n *NacosCenter) GetIP() string {
+	return n.IP
+}
+
 func NewNacos(param vo.NacosClientParam, serv ServiceInfo) (IConfigurationCenter, error) {
 	if serv.IP == "" {
 		serv.IP = GetIPX()
