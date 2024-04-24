@@ -27,7 +27,7 @@ func InitSentinel() error {
 	//注册流控规则Handler
 	h := datasource.NewFlowRulesHandler(datasource.FlowRuleJsonArrayParser)
 	//创建NacosDataSource数据源
-	nds, err := NewNacosDataSource(client, sentinelConfig.ServiceName, sentinelConfig.GroupName, h)
+	nds, err := NewNacosDataSource(client, sentinelConfig.GroupName, sentinelConfig.ServiceName, h)
 	if err != nil {
 		return err
 	}
