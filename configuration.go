@@ -1,10 +1,16 @@
 package configuration
 
+import (
+	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
+)
+
 type IConfigurationCenter interface {
 	IConfigCenter
 	IRegisterCenter
 	IDiscoverCenter
 	SetILogger(log ILogger)
+	GetServiceInfo() ServiceInfo
 }
 
 type IRegisterCenter interface {
@@ -18,11 +24,13 @@ type IRegisterCenter interface {
 }
 
 type IDiscoverCenter interface {
+	GetNamingClient() naming_client.INamingClient
 	DiscoverInstanceOne(group, service string, clusters ...string) (string, error)
 }
 
 type IConfigCenter interface {
 	AddConfigListener(id, group string, callback func(string, string, string, string)) error
+	GetConfigClient() config_client.IConfigClient
 	Get(key string) interface{}
 	GetByID(group, id, key string) interface{}
 }
