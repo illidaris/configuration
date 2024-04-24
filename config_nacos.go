@@ -25,11 +25,13 @@ type ServiceInfo struct {
 	Enable      bool         `yaml:"enable" json:"enable"`
 	Healthy     bool         `yaml:"healthy" json:"healthy"`
 	Others      []ConfigName `yaml:"others" json:"others"`
+	Sentinel    ConfigName   `yaml:"sentinel" json:"sentinel"`
 }
 
 type ConfigName struct {
-	GroupName   string `yaml:"groupname" json:"groupname"`
-	ServiceName string `yaml:"servicename" json:"servicename"`
+	ExtConfigFile string `yaml:"extconfigfile" json:"extconfigfile"`
+	GroupName     string `yaml:"groupname" json:"groupname"`
+	ServiceName   string `yaml:"servicename" json:"servicename"`
 }
 
 type SimpleConfig struct {

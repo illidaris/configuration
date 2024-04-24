@@ -29,8 +29,20 @@ func (n *NacosCenter) SetILogger(log ILogger) {
 	n.logger = log
 }
 
+func (n *NacosCenter) GetConfigClient() config_client.IConfigClient {
+	return n.ConfigClient
+}
+
+func (n *NacosCenter) GetNamingClient() naming_client.INamingClient {
+	return n.NamingClient
+}
+
 func (n *NacosCenter) GetServiceName() string {
 	return n.ServiceName
+}
+
+func (n *NacosCenter) GetServiceInfo() ServiceInfo {
+	return n.ServiceInfo
 }
 
 func (n *NacosCenter) SetRealPort(port int) error {
