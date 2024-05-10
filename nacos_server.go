@@ -110,7 +110,6 @@ func (n *NacosCenter) BatchRegisterService(param vo.BatchRegisterInstanceParam) 
 }
 
 // =========================== discover ===========================
-
 func (n *NacosCenter) DiscoverInstanceOne(group, service string, clusters ...string) (string, error) {
 	instance, err := n.SelectOneHealthyInstance(vo.SelectOneHealthInstanceParam{
 		GroupName:   group,
