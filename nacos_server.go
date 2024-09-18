@@ -125,6 +125,22 @@ func (n *NacosCenter) DiscoverInstanceOne(group, service string, clusters ...str
 	return fmt.Sprintf("%s:%d", instance.Ip, instance.Port), nil
 }
 
+func (n *NacosCenter) DiscoverInstances(group, service string, clusters ...string) ([]string, error) {
+	result := []string{}
+	instances, err := n.SelectAllInstances(vo.SelectAllInstancesParam{
+		GroupName:   group,
+		ServiceName: service,
+		Clusters:    clusters,
+	})
+	if err != nil {
+		return result, err
+	}
+	for _, instance := range instances {
+		result = append(result, fmt.Sprintf("%s:%d", instance.Ip, instance.Port))
+	}
+	return result, nil
+}
+
 func (n *NacosCenter) GetService(param vo.GetServiceParam) (model.Service, error) {
 	return n.NamingClient.GetService(param)
 }

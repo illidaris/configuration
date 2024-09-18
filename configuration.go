@@ -27,6 +27,7 @@ type IRegisterCenter interface {
 type IDiscoverCenter interface {
 	GetNamingClient() naming_client.INamingClient
 	DiscoverInstanceOne(group, service string, clusters ...string) (string, error)
+	DiscoverInstances(group, service string, clusters ...string) ([]string, error)
 }
 
 type IConfigCenter interface {

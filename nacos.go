@@ -13,6 +13,7 @@ import (
 )
 
 var _ = IConfigurationCenter(&NacosCenter{})
+var _ = IDiscoverCenter(&NacosCenter{})
 
 type NacosCenter struct {
 	ServiceInfo
