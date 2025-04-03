@@ -17,6 +17,7 @@ type IRegisterCenter interface {
 	SetRealPort(port int) error
 	GetIP() string
 	GetPort() uint64
+	GetRpcPort() uint64
 	GetServiceName() string
 	RegisterMine(meta map[string]string) error
 	RegisterServ(meta map[string]string, srvname string, port uint64) error
