@@ -1,9 +1,12 @@
 package configuration
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 
+	"github.com/illidaris/aphrodite/pkg/backup"
+	"github.com/illidaris/aphrodite/pkg/netex"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
@@ -42,6 +45,10 @@ func (n *NacosCenter) GetServiceName() string {
 	return n.ServiceName
 }
 
+func (n *NacosCenter) GetRpcServiceName() string {
+	return fmt.Sprintf("%s_%s", n.ServiceName, "rpc")
+}
+
 func (n *NacosCenter) GetServiceInfo() ServiceInfo {
 	return n.ServiceInfo
 }
@@ -59,6 +66,23 @@ func (n *NacosCenter) GetPort() uint64 {
 		return n.RealPort
 	}
 	return n.Port
+}
+
+func (n *NacosCenter) GetRpcPort() uint64 {
+	if n.RPort > 0 {
+		return n.RPort
+	}
+	portStr := backup.ReadFrmDisk(KEY_TMP_RPORT_PATH)
+	port := cast.ToInt(portStr)
+	if port > 0 {
+		return uint64(port)
+	}
+	p, _ := netex.GetFreePort()
+	if p > 0 {
+		backup.WriteToDisk(KEY_TMP_RPORT_PATH, cast.ToString(p))
+		return uint64(p)
+	}
+	return uint64(p)
 }
 
 func (n *NacosCenter) GetIP() string {

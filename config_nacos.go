@@ -20,6 +20,7 @@ type ServiceInfo struct {
 	ClusterName string       `yaml:"clustername" json:"clustername"`
 	IP          string       `yaml:"ip" json:"ip"`
 	Port        uint64       `yaml:"port" json:"port"`
+	RPort       uint64       `yaml:"rport" json:"rport"`
 	Weight      float64      `yaml:"weight" json:"weight"`
 	Ephemeral   bool         `yaml:"ephemeral" json:"ephemeral"`
 	Enable      bool         `yaml:"enable" json:"enable"`
