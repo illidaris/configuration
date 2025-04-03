@@ -22,6 +22,7 @@ type NacosCenter struct {
 	ServiceInfo
 	RealPort uint64
 
+	Meta         *SimpleConfig
 	ConfigClient config_client.IConfigClient
 	NamingClient naming_client.INamingClient
 
@@ -89,11 +90,13 @@ func (n *NacosCenter) GetIP() string {
 	return n.IP
 }
 
-func NewNacos(param vo.NacosClientParam, serv ServiceInfo) (IConfigurationCenter, error) {
+func NewNacos(param vo.NacosClientParam, meta *SimpleConfig) (IConfigurationCenter, error) {
+	serv := meta.Service
 	if serv.IP == "" {
 		serv.IP = GetIPX()
 	}
 	n := &NacosCenter{
+		Meta:        meta,
 		ServiceInfo: serv,
 		settingMap:  map[string]map[string]*viper.Viper{},
 	}
@@ -125,5 +128,5 @@ func NewSimpleNacos(cfg *SimpleConfig) (IConfigurationCenter, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewNacos(p, cfg.Service)
+	return NewNacos(p, cfg)
 }
