@@ -23,6 +23,7 @@ type IRegisterCenter interface {
 	RegisterServ(meta map[string]string, srvname string, port uint64) error
 	DeRegisterMine() error
 	DeRegisterServ(srvname string, port uint64) error
+	GetMeta() SimpleConfig
 }
 
 type IDiscoverCenter interface {

@@ -90,6 +90,10 @@ func (n *NacosCenter) GetIP() string {
 	return n.IP
 }
 
+func (n *NacosCenter) GetMeta() SimpleConfig {
+	return *n.Meta
+}
+
 func NewNacos(param vo.NacosClientParam, meta *SimpleConfig) (IConfigurationCenter, error) {
 	serv := meta.Service
 	if serv.IP == "" {
