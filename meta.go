@@ -17,7 +17,12 @@ const (
 	KEY_TMP_RPORT_PATH = "./tmp/rport.txt"
 )
 
+var secretKey = ""
 var DefaultCenter IConfigurationCenter
+
+func SetSecretKey(key string) {
+	secretKey = key
+}
 
 func IsRemote() bool {
 	b := viper.GetBool(KEY_IS_REMOTE)

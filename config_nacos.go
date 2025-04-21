@@ -1,9 +1,12 @@
 package configuration
 
 import (
+	"bytes"
+	"encoding/base64"
 	"os"
 	"path"
 
+	"github.com/illidaris/aphrodite/pkg/encrypter"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 )
@@ -79,6 +82,21 @@ type SimpleClientConfig struct {
 	Password    string `yaml:"password" json:"password"`       // the password for nacos auth
 }
 
+func (c *SimpleClientConfig) GetRealPwd() string {
+	if secretKey == "" {
+		return c.Password
+	}
+	pwdBs := []byte{}
+	rawBs, err := base64.StdEncoding.DecodeString(c.Password)
+	if err != nil {
+		return c.Password
+	}
+	err = encrypter.DecryptStream(bytes.NewBuffer(rawBs), bytes.NewBuffer(pwdBs), []byte(secretKey))
+	if err != nil {
+		return c.Password
+	}
+	return string(pwdBs)
+}
 func (c *SimpleClientConfig) ToOption() ([]constant.ClientOption, error) {
 	opts := []constant.ClientOption{}
 	pwd, err := os.Getwd()
@@ -96,7 +114,7 @@ func (c *SimpleClientConfig) ToOption() ([]constant.ClientOption, error) {
 		constant.WithNotLoadCacheAtStart(true),
 		constant.WithCacheDir(cacheDir),
 		constant.WithUsername(c.Username),
-		constant.WithPassword(c.Password),
+		constant.WithPassword(c.GetRealPwd()),
 		constant.WithEndpoint(c.Endpoint),
 		constant.WithLogDir(logDir),
 		constant.WithLogLevel(level),
