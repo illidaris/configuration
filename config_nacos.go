@@ -87,15 +87,16 @@ func (c *SimpleClientConfig) GetRealPwd() string {
 		return c.Password
 	}
 	pwdBs := []byte{}
+	w := bytes.NewBuffer(pwdBs)
 	rawBs, err := base64.StdEncoding.DecodeString(c.Password)
 	if err != nil {
 		return c.Password
 	}
-	err = encrypter.DecryptStream(bytes.NewBuffer(rawBs), bytes.NewBuffer(pwdBs), []byte(secretKey))
+	err = encrypter.DecryptStream(bytes.NewBuffer(rawBs), w, []byte(secretKey))
 	if err != nil {
 		return c.Password
 	}
-	return string(pwdBs)
+	return w.String()
 }
 func (c *SimpleClientConfig) ToOption() ([]constant.ClientOption, error) {
 	opts := []constant.ClientOption{}
