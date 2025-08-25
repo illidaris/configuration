@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"bytes"
+	"crypto/cipher"
 	"encoding/base64"
 	"os"
 	"path"
@@ -92,7 +93,12 @@ func (c *SimpleClientConfig) GetRealPwd() string {
 	if err != nil {
 		return c.Password
 	}
-	err = encrypter.DecryptStream(bytes.NewBuffer(rawBs), w, []byte(secretKey))
+	err = encrypter.DecryptStream(
+		bytes.NewBuffer(rawBs),
+		w,
+		[]byte(secretKey),
+		encrypter.WithDecrypter(cipher.NewCFBDecrypter),
+	)
 	if err != nil {
 		return c.Password
 	}
